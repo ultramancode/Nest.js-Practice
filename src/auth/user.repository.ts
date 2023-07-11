@@ -1,15 +1,21 @@
-import { Repository } from "typeorm";
+import { DataSource, Repository } from "typeorm";
 import { User } from "./user.entity";
 import { AuthCredentialsDto } from "./dto/authCredentials.dto";
 import { InjectRepository } from "@nestjs/typeorm";
 import { Board } from "../boards/boards.entity";
-import { ConflictException, InternalServerErrorException } from "@nestjs/common";
+import { ConflictException, Injectable, InternalServerErrorException } from "@nestjs/common";
 import * as bcrypt from 'bcryptjs';
-
+@Injectable()
 export class UserRepository extends Repository<User>{
 
-  constructor(@InjectRepository(User) private readonly repository: Repository<User>){
-    super(repository.target, repository.manager, repository.queryRunner);
+  // constructor(@InjectRepository(User) private readonly repository: Repository<User>){
+  //   super(repository.target, repository.manager, repository.queryRunner);
+  // }
+  // constructor(private readonly  datasource: DataSource) {
+  //   super(User, datasource.createEntityManager());
+  // }
+  constructor(private readonly  datasource: DataSource) {
+    super(User, datasource.createEntityManager());
   }
   async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User>{
     const{username, password} = authCredentialsDto;

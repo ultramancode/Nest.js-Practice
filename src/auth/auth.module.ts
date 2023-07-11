@@ -8,16 +8,19 @@ import { JwtModule } from "@nestjs/jwt";
 import { PassportModule } from "@nestjs/passport";
 import { register } from "tsconfig-paths";
 import { JwtStrategy } from "./jwt/jwt.strategy";
+import * as config from 'config';
 
+const jwtConfig = config.get('jwt');
 @Module({
   imports: [
   TypeOrmModule.forFeature([User]),
     //패스포트에서 jwt 사용할거니까
   PassportModule.register({defaultStrategy: 'jwt'}),
   JwtModule.register({
-    secret: 'Secret1234',
+    //마찬가지로 aws같은데다가 입력한 경우 먼저 거기서 가져오기
+    secret: process.env.JWT_SECRET || jwtConfig.secret,
     signOptions:{
-      expiresIn: 60 * 60,
+      expiresIn: jwtConfig.expiresIn,
     }
   })],
   controllers: [AuthController],

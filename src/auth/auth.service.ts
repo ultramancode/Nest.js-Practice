@@ -8,10 +8,15 @@ import { JwtService } from "@nestjs/jwt";
 
 @Injectable()
 export class AuthService {
+  // constructor(
+  //   @InjectRepository(UserRepository)
+  //   private readonly userRepository: UserRepository,
+  //   private jwtService: JwtService,
+  //   ) {
+  // }
   constructor(
-    @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
-    private jwtService: JwtService,
+    private readonly jwtService: JwtService,
     ) {
   }
 
