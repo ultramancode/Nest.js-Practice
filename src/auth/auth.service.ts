@@ -31,7 +31,7 @@ export class AuthService {
     //유저가 있는지 확인 및 비번~
     if(user && (await bcrypt.compare(password, user.password))) {
       const payload = { username };
-      const accessToken = await this.jwtService.sign(payload);
+      const accessToken = this.jwtService.sign(payload);
       return { accessToken };
     } else {
       throw new UnauthorizedException('로그인 실패')

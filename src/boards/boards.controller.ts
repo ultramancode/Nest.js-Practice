@@ -65,7 +65,7 @@ export class BoardsController {
 
 
   @Get()
-  getAllBoard(): Promise<Board[]>{
+  getAllBoard(): Promise<ResponseBoardDto[]>{
     return this.boardsService.getAllBoards();
   }
 

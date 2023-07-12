@@ -4,6 +4,8 @@ import { Logger } from "@nestjs/common";
 import * as config from 'config';
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+  app.enableCors();
+
   //최상위에 있는 default.yml 파일에서 server: 을 가져오는 것
   const serverConfig = config.get('server');
   //마찬가지로 server: 밑에 있는 port: 가져오는 것

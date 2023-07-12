@@ -9,7 +9,7 @@ export class Board extends BaseEntity{
   @Column()
   title: string;
   @Column()
-  description: string;
+  content: string;
   @Column()
   status: BoardStatus;
   //타입, 접근하려면 어떻게 해야하는지 user에서 user.boards~, eager false가 lazy

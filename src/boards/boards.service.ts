@@ -8,7 +8,7 @@ import { Repository, Transaction } from "typeorm";
 import { BoardRepository } from "./borads.repository";
 import { User } from "../auth/user.entity";
 import { Board } from "./boards.entity";
-import { ResponseBoardDto } from "./dto/reponseBoardDto";
+import { ResponseBoardDto, ResponseBoardDtoBuilder } from "./dto/reponseBoardDto";
 import { async } from "rxjs";
 import { AppDataSource } from "../common/configs";
 @Injectable()
@@ -34,7 +34,7 @@ export class BoardsService {
       const responseBoardDto: ResponseBoardDto ={
         id: board.id,
         title: board.title,
-        description: board.description,
+        content: board.content,
         status: board.status,
         username: user.username
       };
@@ -86,14 +86,24 @@ export class BoardsService {
 
   async updateBoardStatus(id: number, status: BoardStatus): Promise<Board> {
     const board = await this.getBoardById(id);
-
     board.status = status;
     await this.boardRepository.save(board);
     return board;
   }
 
-  async getAllBoards(): Promise<Board[]>{
-    return this.boardRepository.find();
+  async getAllBoards(): Promise<ResponseBoardDto[]> {
+    //lazy로딩이라 relations안해주면 user 못 읽어낸다!
+    const boards: Board[] = await this.boardRepository.find({relations: ['user']});
+    const responseBoardList: ResponseBoardDto[] = boards.map((board: Board) => {
+      const responseBoard = ResponseBoardDto.builder()
+      .withId(board.id)
+      .withTitle(board.title)
+      .withContent(board.content)
+      .withUsername(board.user.username)
+      .build();
+      return responseBoard;
+    });
+    return responseBoardList;
   }
   // async getAllBoards(user: User): Promise<Board[]>{
   //   const query = this.boardRepository.createQueryBuilder('board');

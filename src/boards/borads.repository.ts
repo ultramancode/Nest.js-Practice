@@ -21,10 +21,10 @@ export class BoardRepository extends Repository<Board>{
 
 
   async createBoard(createBoardDto: RequestBoardDto, user: User): Promise<Board> {
-    const {title, description, } = createBoardDto;
+    const {title, content, } = createBoardDto;
     const board = this.create({
       title,
-      description,
+      content: content,
       status: BoardStatus.PUBLIC,
       user: user
       });

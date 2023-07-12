@@ -5,5 +5,5 @@ export class RequestBoardDto {
   @IsNotEmpty()
   title: string;
   @IsNotEmpty()
-  description: string;
+  content: string;
 }
