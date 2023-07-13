@@ -1,16 +1,13 @@
-import { Inject, Injectable, NotFoundException } from "@nestjs/common";
+import { Injectable, NotFoundException } from "@nestjs/common";
 import { BoardStatus } from "./boards.status";
 
 //v1이라고 쓰면 가독성 안좋으니 uuid 별칭으로
 import { RequestBoardDto } from "./dto/requestBoardDto";
-import { InjectRepository } from "@nestjs/typeorm";
-import { Repository, Transaction } from "typeorm";
 import { BoardRepository } from "./borads.repository";
 import { User } from "../auth/user.entity";
 import { Board } from "./boards.entity";
-import { ResponseBoardDto, ResponseBoardDtoBuilder } from "./dto/reponseBoardDto";
-import { async } from "rxjs";
-import { AppDataSource } from "../common/configs";
+import { ResponseBoardDto } from "./dto/reponseBoardDto";
+
 @Injectable()
 export class BoardsService {
   //
@@ -91,19 +88,25 @@ export class BoardsService {
     return board;
   }
 
-  async getAllBoards(): Promise<ResponseBoardDto[]> {
+  async getAllBoards(page: number, limit: number): Promise<{boards: ResponseBoardDto[], totalPages: number}> {
+    const skip = (page -1) * limit; //건너뛸 항목 수
+    const take = limit; //가져올 항목 수
+
+
     //lazy로딩이라 relations안해주면 user 못 읽어낸다!
-    const boards: Board[] = await this.boardRepository.find({relations: ['user']});
-    const responseBoardList: ResponseBoardDto[] = boards.map((board: Board) => {
-      const responseBoard = ResponseBoardDto.builder()
-      .withId(board.id)
-      .withTitle(board.title)
-      .withContent(board.content)
-      .withUsername(board.user.username)
+    const boards: [Board[], number] = await this.boardRepository.findAndCount({relations: ['user'], skip, take,});
+    const [boardEntities,totalCount] = boards;
+    const responseBoardList: ResponseBoardDto[] = boardEntities.map((boardEntities: Board) => {
+      return ResponseBoardDto.builder()
+      .withId(boardEntities.id)
+      .withTitle(boardEntities.title)
+      .withContent(boardEntities.content)
+      .withUsername(boardEntities.user.username)
       .build();
-      return responseBoard;
     });
-    return responseBoardList;
+
+    const totalPages = Math.ceil(totalCount/limit);
+    return {boards: responseBoardList, totalPages};
   }
   // async getAllBoards(user: User): Promise<Board[]>{
   //   const query = this.boardRepository.createQueryBuilder('board');

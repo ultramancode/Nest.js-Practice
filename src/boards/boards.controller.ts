@@ -5,7 +5,7 @@ import {
   Get, Logger,
   Param, ParseIntPipe,
   Patch,
-  Post, Put, UseGuards,
+  Post, Put, Query, UseGuards,
   UsePipes,
   ValidationPipe
 } from "@nestjs/common";
@@ -65,8 +65,9 @@ export class BoardsController {
 
 
   @Get()
-  getAllBoard(): Promise<ResponseBoardDto[]>{
-    return this.boardsService.getAllBoards();
+  //@Query는 스프링의 @RequestParam 같은 역할
+  getAllBoards(@Query('page') page: number = 1, @Query('limit') limit: number = 3): Promise<{boards: ResponseBoardDto[], totalPages: number}>{
+    return this.boardsService.getAllBoards(page, limit);
   }
 
 
