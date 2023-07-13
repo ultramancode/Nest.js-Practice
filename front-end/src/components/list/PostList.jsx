@@ -46,15 +46,17 @@ function PostList() {
   const handlePrevPage = () => {
     if (currentPage > 1) {
       setCurrentPage((prevPage) => prevPage-1);
+    } else {
+      setCurrentPage(1);
     }
   };
   const handleNextPage = () => {
-    if (currentPage + 10 <= totalPages) {
-      setCurrentPage(currentPage + 10);
+    if (currentPage < totalPages) {
+      setCurrentPage(currentPage + 1);
     } else {
       setCurrentPage(totalPages);
     }
-  }
+  };
   //나타내는 페이지 체인지! 10페이지 단위
 
   const handlePrevPages = () => {
@@ -74,15 +76,22 @@ function PostList() {
   const currentPageGroup = Math.ceil(currentPage/ maxPagesToShow); // 현재 페이지 그룹
   const renderPageNumbers = () => {
 
+    //10페이지면 -> 첫번째 그룹이니까 0 + 1 렌더링 페이지에서는 즉 1페이지가 시작페이지
     let startPage = Math.floor(currentPageGroup -1) * maxPagesToShow + 1;
+  //10페이지면 1 + 10 -1 즉 10페이지가 마지막 페이지
     let endPage = startPage + maxPagesToShow -1;
     if (endPage > totalPages) {
       endPage = totalPages;
     }
 
+    //endpage까지 포함해서 페이지버튼 생성하기 위해 <=
     for (let i = startPage; i <= endPage; i ++)  {
+      const isActive = i ===currentPage; // 현재 페이지 여부 확인
+      const buttonStyle = {
+        backgroundColor: isActive ? "lightblue" : "white" , // 현재 페이지인 경우 배경색 파란색으로
+      };
       pageNumbers.push(
-        <button key = {i} onClick = { () => handlePageChange(i)}
+        <button key = {i} onClick = { () => handlePageChange(i)} style = {buttonStyle}
         >
           {i}
         </button>
