@@ -5,16 +5,16 @@ import { Get } from "@nestjs/common";
 @Unique(['username'/*,''*/])
 export class User extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id: number;
+  readonly id: number;
 
   @Column()
-  username: string;
+  readonly username: string;
 
   @Column()
-  password: string;
+  readonly password: string;
 
   @OneToMany(type => Board, board => board.user, { eager: true} )
-  boards: Board[]
+  readonly boards: Board[]
 
   get user(): User {
     return this.user;

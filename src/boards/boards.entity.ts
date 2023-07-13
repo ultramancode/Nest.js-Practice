@@ -5,13 +5,13 @@ import { User } from "../auth/user.entity";
 @Entity()
 export class Board extends BaseEntity{
   @PrimaryGeneratedColumn()
-  id: number;
+  readonly id: number;
   @Column()
-  title: string;
+  readonly title: string;
   @Column()
-  content: string;
+  readonly content: string;
   @Column()
-  status: BoardStatus;
+  readonly status: BoardStatus;
   //타입, 접근하려면 어떻게 해야하는지 user에서 user.boards~, eager false가 lazy
   @ManyToOne(type => User, user => user.boards, {eager: false})
   user: User;

@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 export class RequestBoardDto {
   //대문자 I로 시작하는 데코레이터.. ()까지..
   @IsNotEmpty()
-  title: string;
+  readonly title: string;
   @IsNotEmpty()
-  content: string;
+  readonly content: string;
 }

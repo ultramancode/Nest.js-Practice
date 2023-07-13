@@ -3,15 +3,15 @@ import { BoardStatus } from "../boards.status";
 
 export class ResponseBoardDto {
   @IsNotEmpty()
-  id: number;
+  readonly id: number;
   @IsNotEmpty()
-  title: string;
+  readonly title: string;
   @IsNotEmpty()
-  content: string;
+  readonly content: string;
   @IsNotEmpty()
-  status: BoardStatus;
+  readonly status: BoardStatus;
   @IsNotEmpty()
-  username: string;
+  readonly username: string;
 
   constructor(builder: ResponseBoardDtoBuilder) {
     this.id = builder.id;
