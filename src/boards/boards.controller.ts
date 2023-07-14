@@ -19,6 +19,7 @@ import { GetUser } from "../common/decorator/getUser.decorator";
 import { User } from "../auth/user.entity";
 import { BoardRepository } from "./borads.repository";
 import { ResponseBoardDto } from "./dto/reponseBoardDto";
+import { UpdateBoardDto } from "./dto/updateBoardDto";
 
 @Controller("boards")
 //리퀘스트 객체안에 유저정보~
@@ -59,6 +60,11 @@ export class BoardsController {
                     @Body("status", BoardStatusValidationPipe) status: BoardStatus
   ): Promise<Board> {
     return this.boardsService.updateBoardStatus(id, status);
+  }
+
+  @Put("/:id")
+  updateBoard(@Param("id", ParseIntPipe) id: number, @Body()updateBoardDto: UpdateBoardDto, @GetUser() user: User): Promise<Board>{
+  return this.boardsService.updateBoard(id, updateBoardDto);
   }
 
 

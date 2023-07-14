@@ -2,6 +2,10 @@ import { BaseEntity, Column, Entity, ManyToOne, PrimaryGeneratedColumn } from "t
 import { BoardStatus } from "./boards.status";
 import { User } from "../auth/user.entity";
 import { RequestBoardDto } from "./dto/requestBoardDto";
+import { UpdateBoardDto } from "./dto/updateBoardDto";
+import { INVALID_EXCEPTION_FILTER } from "@nestjs/core/errors/messages";
+import { ConflictException } from "@nestjs/common";
+import { updateOutput } from "ts-jest/dist/legacy/compiler/compiler-utils";
 
 @Entity()
 export class Board extends BaseEntity{
@@ -30,9 +34,18 @@ export class Board extends BaseEntity{
   //   return this.user;
   // }
 
-  public updateBoard(requestBoardDto: RequestBoardDto): void{
-    this.title = requestBoardDto.title;
-    this.content = requestBoardDto.content;
+  public updateBoard(updateBoardDto: UpdateBoardDto): void{
+    if(updateBoardDto.title == ""){
+      throw new ConflictException();
+    }
+    this.title = updateBoardDto.title;
+    this.content = updateBoardDto.content;
+  }
+  public updateBoardTest(title: string): void{
+    if(title == ""){
+      throw new ConflictException("트랜잭션 테스트! 제목에 공백을 넣을 수 없습니다.");
+    }
+    this.title = title;
   }
 
 }
