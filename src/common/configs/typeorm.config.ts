@@ -18,7 +18,7 @@ export const typeormConfig: TypeOrmModuleOptions = {
   database: process.env.RDS_DB_NAME || dbConfig.database,
   // entities: [__dirname + '/../**/*.entity.{js,ts}'],
   autoLoadEntities: true,
-  synchronize: dbConfig.synchronize,
+  synchronize: dbConfig.synchronize, //데이터 유실 위험 있으니 프로덕셔션에선 false
   // type: 'postgres',
   // host: 'localhost',
   // port: 5432,

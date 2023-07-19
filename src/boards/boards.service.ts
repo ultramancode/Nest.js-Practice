@@ -8,7 +8,6 @@ import { User } from "../auth/user.entity";
 import { Board } from "./boards.entity";
 import { ResponseBoardDto } from "./dto/reponseBoardDto";
 import { UpdateBoardDto } from "./dto/updateBoardDto";
-import { async } from "rxjs";
 
 @Injectable()
 export class BoardsService {
@@ -100,6 +99,7 @@ export class BoardsService {
       return this.boardRepository.manager.transaction(async (manager) => {
         const board = await this.boardRepository.getBoardAndUserById(id);
         console.log(board.user);
+        throw new NotFoundException();
         board.updateBoard(updateBoardDto);
         await manager.save(board);
         return board;
